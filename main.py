@@ -30,15 +30,14 @@ def create_pdf_report(income, credit, logs, audit_results):
     if audit_results:
         for res in audit_results:
             # 强制转换为纯英文文本输出
-            safe_text = str(res).encode('ascii', 'ignore').decode('ascii')
-            pdf.multi_cell(0, 8, f"- {safe_text}")
-    else:
-        pdf.cell(0, 8, "No significant risk identified in 1099 PDF.", ln=True)
+            # 第 33 行左右，把 0 改成 190
+    pdf.cell(190, 8, f"Estimated Household Income: ${income:,}", ln=True)
+    pdf.cell(190, 8, f"Calculated Credits/Adjustments: ${credit:,}", ln=True)
     
-    pdf.ln(10)
-    pdf.set_font("Helvetica", "I", 8)
-    pdf.multi_cell(0, 5, "Disclaimer: Based on 2026 IRS rules. Please consult a CPA for final filing.")
-    return pdf.output(dest='S').encode('latin-1')
+    # 第 41 行左右，把 0 改成 190
+    for res in audit_results:
+        safe_text = str(res).encode('ascii', 'ignore').decode('ascii')
+        pdf.multi_cell(190, 8, f"- {safe_text}")
 
 # --- Streamlit UI 界面设计 ---
 st.set_page_config(page_title="TingTax Pro", layout="wide")
