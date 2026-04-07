@@ -49,7 +49,8 @@ def create_pdf_report(income, credit, logs, audit_results):
     pdf.cell(0, 10, "Brokerage 1099 Audit Summary:", ln=True)
     pdf.set_font("Helvetica", "", 10)
     for res in audit_summary:
-        res_text = f"审计摘要:\n{str(res)}"
+        # 彻底移除中文字符，改用英文
+        res_text = f"Audit Summary:\n{str(res)}"
         pdf.multi_cell(0, 10, res_text)
     
     pdf.ln(10)
