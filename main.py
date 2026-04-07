@@ -70,13 +70,19 @@ if st.button("📥 一键生成 PDF 结案报告 / Generate Report"):
         st.error("❌ 错误：根目录下缺少 font.ttf 字体文件！")
     else:
         try:
-            pdf_bytes = create_pdf_report(income, audit_summary)
+            # 1. 生成 PDF 数据
+            pdf_data = create_pdf_report(income, audit_summary)
+            
+            # 2. 核心修正：将 bytearray 转换为标准的 bytes 格式
+            final_pdf = bytes(pdf_data)
+            
+            # 3. 提供下载
             st.download_button(
                 label="点击下载中英文报告 / Download PDF",
-                data=pdf_bytes,
+                data=final_pdf,
                 file_name="Tax_Audit_Report_2026.pdf",
                 mime="application/pdf"
             )
-            st.success("✅ 报告已生成！")
+            st.success("✅ 报告已生成！请点击上方下载按钮。")
         except Exception as e:
             st.error(f"生成失败: {e}")
