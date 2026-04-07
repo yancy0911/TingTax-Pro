@@ -15,9 +15,9 @@ def extract_tax_data(file):
     name_match = re.search(r"Your first name.*?\n(.*?)\n", text)
     last_match = re.search(r"Last name.*?\n(.*?)\n", text)
     full_name = f"{name_match.group(1)} {last_match.group(1)}" if name_match and last_match else "未识别"
-    
-    # 2. 抓取 AGI (匹配 Adjusted Gross Income 9,293)
-    agi_match = re.search(r"adjusted gross income.*?(\d+[,.]\d+)", text, re.IGNORECASE)
+    # 1. 抓取姓名并进行清洗 (只保留字母和空格)
+        raw_name = f"{name_match.group(1)} {last_match.group(1)}" if name_match and last_match else "未识别"
+        full_name = re.sub(r'[^a-zA-Z\s]', '', raw_name).strip()
     agi = float(agi_match.group(1).replace(',', '')) if agi_match else 0.0
     
     # 3. 抓取报税身份 (匹配 Single)
