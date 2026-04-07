@@ -49,7 +49,7 @@ def create_pdf_report(income, credit, logs, audit_results):
     pdf.cell(0, 10, "Brokerage 1099 Audit Summary:", ln=True)
     pdf.set_font("Helvetica", "", 10)
     for res in audit_results:
-        pdf.multi_cell(0, 8, res)
+        pdf.multi_cell(0, 10, str(res))
     
     pdf.ln(10)
     pdf.set_font("Helvetica", "I", 10)
