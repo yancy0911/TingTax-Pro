@@ -12,32 +12,31 @@ def create_pdf_report(income, audit_results):
     pdf = AuditReport()
     pdf.add_page()
     
-    # 1. Summary
+    # 1. Summary Section
     pdf.set_font("Helvetica", "B", 12)
     pdf.cell(190, 10, "1. Household Summary / Family Estimate", ln=True)
     pdf.set_font("Helvetica", "", 10)
-    pdf.cell(190, 8, f"Income (MAGI): ${income:,}", ln=True)
+    pdf.cell(190, 8, f"Estimated Income (MAGI): ${income:,}", ln=True)
     pdf.ln(5)
     
-    # 2. 1099 Audit
+    # 2. 1099 Audit Section
     pdf.set_font("Helvetica", "B", 12)
     pdf.cell(190, 10, "2. Brokerage 1099 Audit / AI Audit Results", ln=True)
     pdf.set_font("Helvetica", "", 10)
     
     if audit_results:
         for res in audit_results:
-            # 自动处理字符，确保安全输出
-            safe_content = str(res)
-            pdf.multi_cell(190, 8, f"- {safe_content}")
+            # 自动处理字符，确保安全输出（已在代码中包含中文含义）
+            pdf.multi_cell(190, 8, f"- {str(res)}")
     else:
-        pdf.cell(190, 8, "No significant risk found.", ln=True)
+        pdf.cell(190, 8, "No significant risk found / 未发现显著风险", ln=True)
         
     pdf.ln(10)
     pdf.set_font("Helvetica", "I", 8)
-    pdf.multi_cell(190, 5, "Disclaimer: For reference only based on 2026 IRS rules.\nNotice: This is an AI-assisted audit.")
+    pdf.multi_cell(190, 5, "Disclaimer: For reference only based on 2026 IRS rules.\nNotice: This is an AI-assisted audit / 本报告由 AI 辅助生成，仅供参考。")
     return pdf.output(dest='S')
 
-# --- UI 界面 ---
+# --- Streamlit UI 界面 (已根据你的截图优化) ---
 st.set_page_config(page_title="华人报税助手 Pro", layout="wide")
 st.title("🚀 华人报税助手 Pro (2026 报告版)")
 st.subheader("Chinese Tax Assistant Pro - 2026 Report Edition")
@@ -59,15 +58,16 @@ with col2:
     if uploaded_file:
         st.warning("⚠️ Wash Sale Disallowed: $5,687.55")
         st.info("ℹ️ 1099-MISC Extra Income: $245.89")
-        # 这里我们把报告内容写成中英对照
+        # 这里我们把报告内容写成更直观的中英对照
         audit_summary = [
             "Wash Sale Risk (洗售风险): $5,687.55", 
-            "Extra Misc Income (其他收入): $245.89"
+            "Extra Misc Income (其他杂项收入): $245.89"
         ]
 
 st.markdown("---")
 if st.button("📥 一键生成 PDF 结案报告 / Generate Report"):
     try:
+        # 直接输出字节流，不再进行额外的编码转换，防止报错
         pdf_out = create_pdf_report(income, audit_summary)
         st.download_button(
             label="点击下载报告 / Download PDF Report",
@@ -75,6 +75,6 @@ if st.button("📥 一键生成 PDF 结案报告 / Generate Report"):
             file_name="Tax_Audit_Report_2026.pdf",
             mime="application/pdf"
         )
-        st.success("✅ 报告已生成 / Report Ready!")
+        st.success("✅ 报告已就绪 / Report Ready!")
     except Exception as e:
         st.error(f"Error: {str(e)}")
